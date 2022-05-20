@@ -1,4 +1,3 @@
-/*serve buffer per evitare il flickering dellos chermo*/
 #include <iostream>
 #include "windows.h"
 #include "stdlib.h"
@@ -41,7 +40,6 @@ int main()
    
 }
 
-
 void setup() {
     gameover = 0;
     c.lunghezza = 1; //il primo pezzo della coda è uno spazio
@@ -77,11 +75,11 @@ void draw() {
     }
 };
  
-void input() { //manca non potersi girare se lunghezza>1
+void input() { 
     if (_kbhit()) {
         switch (_getch()) {
         case 'a': 
-            if (!(vx == 1 && c.lunghezza > 0)) { //non si puo invertire direz quando la coda è >0 e la dir opposta
+            if (!(vx == 1 && c.lunghezza > 0)) { //non si puo invertire direz quando la coda è >0
                 vx = -1;
                 vy = 0;
             }
@@ -130,7 +128,6 @@ void update() {
     //pos frutta, da aggiornare solo quando è presa
     //non c'è bisogno di farla sparire perche viene sovrascritta da O
     if (x==xF && y==yF) { //condizione di frutta presa
-        //da mettere un while non ci si trova sulla coda
         xF = rand() % (dim - 2) + 1;
         yF = rand() % (dim - 2) + 1;
         mat[yF][xF] = 'F';
