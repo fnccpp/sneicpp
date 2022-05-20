@@ -1,6 +1,8 @@
 # Sneicpp 🐍
 A console clone of the popular snake game
 
+![](https://img.shields.io/github/last-commit/fnccpp/organik) ![](https://img.shields.io/badge/platforms-Windows-lightgrey) ![](https://img.shields.io/badge/license-MIT-brightgreen) ![](https://img.shields.io/tokei/lines/github/fnccpp/sneicpp)
+
 ## Description
 
 Try to beat the game without having seizures from how bad screen refresh is.
