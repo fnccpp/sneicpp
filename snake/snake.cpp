@@ -24,13 +24,16 @@ void update();
 
 int main()
 {
-    while (1) {
+    
+
+    //loop del gioco
+    while (true) {
         setup();
         while (!gameover) {
             draw();
             input();
             update();
-            Sleep(0);
+            //Sleep(0);
         }
         system("cls");
         cout << "GAME OVER";
@@ -41,7 +44,7 @@ int main()
 }
 
 void setup() {
-    gameover = 0;
+    gameover = false;
     c.lunghezza = 1; //il primo pezzo della coda è uno spazio
     //pos iniziale
     srand(time(NULL));
@@ -66,13 +69,24 @@ void setup() {
 };
 
 void draw() {
-    system("cls");
+    //crea buffer
+    wchar_t* screen = new wchar_t[dim * dim];
+    HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+    SetConsoleActiveScreenBuffer(hConsole);
+    DWORD dwBytesWritten = 0;
+
+    //system("cls"); //clear screen
     for (int i = 0; i < dim; i++) {
         for (int j = 0; j < dim; j++) {
-            cout << mat[i][j];
+            screen[i * dim + j] = mat[i][j];
+            
+            //cout << mat[i][j];
         }
-        cout << endl;
+        //cout << endl;
     }
+
+    screen[dim * dim - 1] = '\0';
+    WriteConsoleOutputCharacter(hConsole, screen, dim * dim, { 0,0 }, &dwBytesWritten);
 };
  
 void input() { 
@@ -135,11 +149,11 @@ void update() {
     }
     //cond di gameover
     if (x == 0 || x == dim-1 || y == 0 || y == dim-1) {
-        gameover = 1;
+        gameover = true;
     }
     for (int i = 2; i < c.lunghezza; i++) { //parte da due perche non puo collidere con i primi 2 pezzi della coda
         if (x == c.xC[i] && y == c.yC[i]) {
-            gameover = 1;
+            gameover = true;
         }
     }
 };
