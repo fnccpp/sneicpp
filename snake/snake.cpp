@@ -11,6 +11,7 @@ const int dim = 30;
 char mat[dim][dim];
 int x, y, vx, vy; //posiz e veloc
 int xF, yF; //pos frutta
+int framesInterval = 100;
 struct coda {
     int xC[300];
     int yC[300];
@@ -24,13 +25,13 @@ void update();
 
 int main()
 {
-    while (1) {
+    while (true) {
         setup();
         while (!gameover) {
             draw();
             input();
             update();
-            Sleep(0);
+            Sleep(framesInterval);
         }
         system("cls");
         cout << "GAME OVER";
@@ -132,6 +133,7 @@ void update() {
         yF = rand() % (dim - 2) + 1;
         mat[yF][xF] = 'F';
         c.lunghezza ++;
+        framesInterval = floor(framesInterval/1.1);
     }
     //cond di gameover
     if (x == 0 || x == dim-1 || y == 0 || y == dim-1) {
