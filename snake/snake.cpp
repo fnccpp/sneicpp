@@ -46,6 +46,7 @@ int main()
 
 void setup() {
     gameover = false;
+    framesInterval = 100;
     c.lunghezza = 1; //il primo pezzo della coda è uno spazio
     //pos iniziale
     srand(time(NULL));
