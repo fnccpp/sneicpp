@@ -7,6 +7,7 @@
 using namespace std;
 
 bool gameover;
+string gameoverScreen = "GAME OVER";
 const int dim = 30;
 char mat[dim][dim];
 int x, y, vx, vy; //posiz e veloc
@@ -19,7 +20,7 @@ struct coda {
 } c;
 
 void setup();
-void draw();
+void draw(wchar_t* screen);
 void input();
 void update();
 
@@ -30,18 +31,24 @@ int main()
     //loop del gioco
     while (true) {
         setup();
+        //crea buffer
+        wchar_t* screen = new wchar_t[dim * dim];
+        HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+        SetConsoleActiveScreenBuffer(hConsole);
+        DWORD dwBytesWritten = 0;
+        
+        //partita
+        draw(screen);
+        WriteConsoleOutputCharacter(hConsole, screen, dim * dim, { 0,0 }, &dwBytesWritten);
         while (!gameover) {
-            draw();
             input();
             update();
             Sleep(framesInterval);
-        }
-        system("cls");
-        cout << "GAME OVER";
+            draw(screen);
+            WriteConsoleOutputCharacter(hConsole, screen, dim * dim, { 0,0 }, &dwBytesWritten);
+        }        
         _getch();
-    }
-
-   
+    }      
 }
 
 void setup() {
@@ -70,25 +77,28 @@ void setup() {
     mat[yF][xF] = 'F';
 };
 
-void draw() {
-    //crea buffer
-    wchar_t* screen = new wchar_t[dim * dim];
-    HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
-    SetConsoleActiveScreenBuffer(hConsole);
-    DWORD dwBytesWritten = 0;
-
-    //system("cls"); //clear screen
-    for (int i = 0; i < dim; i++) {
-        for (int j = 0; j < dim; j++) {
-            screen[i * dim + j] = mat[i][j];
-            
-            //cout << mat[i][j];
+void draw(wchar_t* screen) {
+    if (!gameover) {
+        //system("cls"); //clear screen
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++) {
+                screen[i * dim + j] = mat[i][j];
+            }
         }
-        //cout << endl;
     }
-
-    screen[dim * dim - 1] = '\0';
-    WriteConsoleOutputCharacter(hConsole, screen, dim * dim, { 0,0 }, &dwBytesWritten);
+    else {
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++) {
+                if (i == 14 && j == 10)
+                    for (int k = 0; k < 9; k++, j++) {
+                        screen[i * dim + j] = gameoverScreen[k];
+                    }
+                else {
+                    screen[i * dim + j] = ' ';
+                }
+            }
+        }
+    }
 };
  
 void input() { 
@@ -136,8 +146,7 @@ void update() {
     }
     mat[c.yC[c.lunghezza]][c.xC[c.lunghezza]] = ' ';
     
-    //update pos
-    
+    //update pos    
     x += vx;
     y += vy;
     mat[y][x] = 'O';
@@ -148,7 +157,7 @@ void update() {
         yF = rand() % (dim - 2) + 1;
         mat[yF][xF] = 'F';
         c.lunghezza ++;
-        framesInterval = floor(framesInterval / 1.1);
+        framesInterval = floor(framesInterval / 1.1); //velocizza il gioco
     }
     //cond di gameover
     if (x == 0 || x == dim-1 || y == 0 || y == dim-1) {
