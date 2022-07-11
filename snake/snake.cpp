@@ -26,7 +26,6 @@ void update();
 
 int main()
 {
-    
 
     //loop del gioco
     while (true) {
@@ -54,7 +53,7 @@ int main()
 void setup() {
     gameover = false;
     framesInterval = 100;
-    c.lunghezza = 1; //il primo pezzo della coda è uno spazio
+    c.lunghezza = 1; //il primo pezzo della coda Ã¨ uno spazio
     //pos iniziale
     srand(time(NULL));
     x = rand() % (dim - 2) + 1; //da 1 a 29
@@ -105,7 +104,7 @@ void input() {
     if (_kbhit()) {
         switch (_getch()) {
         case 'a': 
-            if (!(vx == 1 && c.lunghezza > 0)) { //non si puo invertire direz quando la coda è >0
+            if (!(vx == 1 && c.lunghezza > 0)) { //non si puo invertire direz quando la coda Ã¨ >0
                 vx = -1;
                 vy = 0;
             }
@@ -134,7 +133,7 @@ void input() {
 
 void update() {
     mat[y][x] = ' ';
-    //coda (inizialmente è uno spazio)
+    //coda (inizialmente Ã¨ uno spazio)
     c.yC[0] = y; 
     c.xC[0] = x;
     for (int i = c.lunghezza; i > 0; i--) {
@@ -150,14 +149,15 @@ void update() {
     x += vx;
     y += vy;
     mat[y][x] = 'O';
-    //pos frutta, da aggiornare solo quando è presa
-    //non c'è bisogno di farla sparire perche viene sovrascritta da O
+    //pos frutta, da aggiornare solo quando Ã¨ presa
+    //non c'Ã¨ bisogno di farla sparire perche viene sovrascritta da O
     if (x==xF && y==yF) { //condizione di frutta presa
         xF = rand() % (dim - 2) + 1;
         yF = rand() % (dim - 2) + 1;
         mat[yF][xF] = 'F';
         c.lunghezza ++;
         framesInterval = floor(framesInterval / 1.1); //velocizza il gioco
+
     }
     //cond di gameover
     if (x == 0 || x == dim-1 || y == 0 || y == dim-1) {
